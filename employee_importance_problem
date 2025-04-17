@@ -1,0 +1,35 @@
+#Time complexity:O(n)
+#space complexity:O(n)
+
+from collections import deque
+
+# Definition for Employee.
+class Employee(object):
+    def __init__(self, id, importance, subordinates):
+        """
+        :type id: int
+        :type importance: int
+        :type subordinates: List[int]
+        """
+        self.id = id
+        self.importance = importance
+        self.subordinates = subordinates
+
+class Solution(object):
+    def getImportance(self, employees, id):
+        """
+        :type employees: List[Employee]
+        :type id: int
+        :rtype: int
+        """
+        emp_map = {emp.id: emp for emp in employees}
+        total_importance = 0
+        queue = deque([id])
+        
+        while queue:
+            current_id = queue.popleft()
+            employee = emp_map[current_id]
+            total_importance += employee.importance
+            queue.extend(employee.subordinates)
+        
+        return total_importance
