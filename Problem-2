@@ -1,0 +1,45 @@
+// Time Complexity : O(n), n -> number of employees
+// Time Complexity : O(n)
+
+// Add all employees with their id and details to a hashmap
+// Add the starting id to the queue and do BFS through all its neighbours
+// Add the importance value of each employee from the queue and return the value once the queue is empty
+
+/*
+// Definition for Employee.
+class Employee {
+    public int id;
+    public int importance;
+    public List<Integer> subordinates;
+};
+*/
+
+class Solution {
+    public int getImportance(List<Employee> employees, int id) {
+        HashMap<Integer, Employee> mp = new HashMap<>();
+        // For fast access to employee details
+        for(int i = 0; i < employees.size(); i++) {
+            Employee emp = employees.get(i);
+            mp.put(emp.id, emp);
+        }
+
+        int result = 0;
+        Queue<Integer> q = new LinkedList<>();
+        q.add(id);
+        while(!q.isEmpty()) {
+            int empId = q.poll();
+            Employee emp = mp.get(empId);
+            if(emp != null) {
+                result += emp.importance;
+                // Add subordinates
+                if(emp.subordinates != null) {
+                    List<Integer> sub = emp.subordinates;
+                    for(int i = 0; i < sub.size(); i++) {
+                        q.add(sub.get(i));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
