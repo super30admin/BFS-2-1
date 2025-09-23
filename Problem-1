@@ -1,0 +1,51 @@
+// Time Complexity : O(m*n)
+// Time Complexity : O(m*n)
+
+// Use a queue to keep track of all rotten oranges
+// Do BFS from all rotten oranges and add neighbouring fresh oranges to the queue after turning them rotten
+// After each level of BFS increment counter for time
+
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        Queue<int[]> q = new LinkedList<>();
+        int m = grid.length;
+        int n = grid[0].length;
+        int freshCount = 0;
+
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(grid[i][j] == 2) { // Add all initial positions of rotten oranges
+                    q.add(new int[]{i, j}); 
+                }
+                else if(grid[i][j] == 1) // keep count of fresh oranges in the beginning
+                    freshCount++;
+            }
+        }
+        // If no fresh oranges at the beginning
+        if(freshCount == 0)
+            return 0;
+
+        int time = 0;
+        int[][] dir = {{1,0}, {0,1}, {-1, 0}, {0,-1}};
+        while(!q.isEmpty()) {
+            int size = q.size();
+            for(int i = 0; i < size; i++) {
+                int[] pos = q.poll();
+                // Add all neighbours of the rotten orange to the queue
+                for(int[] d : dir) {
+                    int r = d[0] + pos[0];
+                    int c = d[1] + pos[1];
+                    if(r >= 0 && r < m && c >= 0 && c < n && grid[r][c] == 1) {
+                        grid[r][c] = 2;
+                        q.add(new int[]{r,c});
+                        freshCount--;
+                    }
+                }
+            }
+            time++;
+        }
+        if(freshCount > 0)
+            return -1;
+        return time-1;
+    }
+}
