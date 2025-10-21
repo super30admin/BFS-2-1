@@ -1,0 +1,45 @@
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        //USing level order traversal, adding fresh oranges next to rotten at each level, at last level all will be rotten 
+        int lvl = 0;
+        Queue<int[]> q = new LinkedList<>();
+        int count = 0;
+        for(int i=0;i<grid.length; i++){
+            for(int j =0; j< grid[0].length; j++){
+                if(grid[i][j] == 2){
+                    //adding rotten to queue
+                    q.add(new int[]{i,j});
+                }
+                //keep count of fresh ones
+                if(grid[i][j] == 1){
+                    count++;
+                }
+            }
+        }
+        //if there are no fresh ones, return 0
+        if(count == 0){
+            return 0;
+        }
+        int dirs[][] = new int[][]{{0, -1}, {0, 1}, {-1, 0}, {1, 0}};  //L R U D
+        while(!q.isEmpty()){
+            int size = q.size();  //keep track of level
+            for(int i = 0; i < size; i++){
+                int cell[] = q.poll();
+                for(int dir[] : dirs){
+                    int nr = cell[0]+ dir[0];
+                    int nc = cell[1] + dir[1];
+                    if(nr >= 0 && nr < grid.length && nc >= 0 && nc < grid[0].length && grid[nr][nc] == 1){
+                        count--;
+                        grid[nr][nc] = 2;
+                        q.add(new int[]{nr, nc});
+                    }
+                }
+            }
+            lvl++;
+        }
+        //if all fresh ones turn into rotten, return the min which is lvl or return -1
+        if(count == 0)
+        return lvl - 1;
+        return -1;
+    }
+}

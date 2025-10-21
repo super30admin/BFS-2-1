@@ -1,0 +1,32 @@
+/*
+// Definition for Employee.
+class Employee {
+    public int id;
+    public int importance;
+    public List<Integer> subordinates;
+};
+*/
+
+class Solution {
+    public int getImportance(List<Employee> employees, int id) {
+//By doing a BFS, keep adding the imp of employee and its subordinates
+        int imp = 0;
+//USing a hashmap for easy lookup with key as id and employee object as value
+        HashMap<Integer, Employee> map = new HashMap<>();
+        for(Employee e : employees){
+            map.put(e.id, e);
+        }
+//Adding id to queue and for each id, add its subordinates
+        Queue<Integer> q = new LinkedList<>();
+        q.add(id);
+        while(!q.isEmpty()){
+            int eid = q.poll();
+            Employee e = map.get(eid);
+            imp = imp + e.importance;
+            for(int i : e.subordinates){
+                q.add(i);
+            }
+        }
+        return imp;
+    }
+}
