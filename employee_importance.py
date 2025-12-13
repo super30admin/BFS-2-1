@@ -30,8 +30,6 @@ class Solution:
                     for sub_id in emp.subordinates:
                         # add that into the dequeue
                         q.append(sub_id)
-                        # break the loop if we find the given id
-                    break
         return sum
 
         
