@@ -74,6 +74,13 @@ public class RottenOranges {
     /*============= DFS ============
     Time Complexity : O(MXN), M is the rows and N is the cols in the matrix
     Space Complexity : O(MXN), all M*N nodes can be in the recursion stack
+    DFS: We can start from one rotten orange, go to its nearest fresh orange by incrementing the level. If the level value is
+    less than the fresh orange value, we update the fresh orange value marking it as rotten. If we visit the same orange, through a
+    better path with lower level value, the orange will get updated again. In this way, even if the fresh orange is many levels away
+    from one rotten orange, if there exists a shorter path, the fresh orange will be visited again and updated values.
+    Since the matrix has, 0, 1, 2 to represent different states, we dont want to disturb the existing state, and we will take
+    offset of 2 in starting our level value. Once all the oranges are updated with their level value(minutes to rot), we will remove
+    the offset of 2 and get the max minutes to rot.
     */
     public int orangesRottingDfs(int[][] grid) {
         int rows = grid.length;
@@ -84,6 +91,7 @@ public class RottenOranges {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if(grid[i][j] == 2){
+                    // Start dfs only from the rotten oranges with offset level by 2
                     orangesRottingRecursion(grid, directions, i, j, 2);
                 }
             }
@@ -91,10 +99,12 @@ public class RottenOranges {
         int minimumSeconds = 2;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
+                // if still fresh orange, return -1 as not possible
                 if(grid[i][j] == 1) return -1;
                 minimumSeconds = Math.max(minimumSeconds, grid[i][j]);
             }
         }
+        // remove the level offset value
         return minimumSeconds-2;
     }
 
@@ -103,9 +113,11 @@ public class RottenOranges {
         int cols = grid[0].length;
         if(i < 0 || i >= rows) return;
         if(j < 0 || j >= cols) return;
+        // Check if the new level is greater and if the cell is not fresh, then don't proceed.
         if(grid[i][j] < level && grid[i][j] != 1) return;
 
         grid[i][j] = level;
+        // do dfs in all 4 neighbors
         for (int[] dir : directions){
             int nr = dir[0]+i;
             int nc = dir[1]+j;
